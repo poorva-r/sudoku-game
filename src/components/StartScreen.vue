@@ -14,6 +14,7 @@
 export default {
   name: "StartScreen",
   methods: {
+    // navigate to the game screen when the start button is clicked
     startGame() {
       this.$router.push("/game");
     },
