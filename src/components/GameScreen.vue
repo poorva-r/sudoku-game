@@ -5,7 +5,11 @@
         <div
           v-for="(cell, cellIndex) in row"
           :key="cellIndex"
-          class="w-16 h-16 gap-4 flex items-center justify-center border border-white"
+          :class="[
+            'w-16 h-16 gap-4 flex items-center justify-center border border-white',
+            (rowIndex % 3 === 0) & (rowIndex !== 0) ? 'border-l-4' : '',
+            (cellIndex % 3 === 0) & (cellIndex !== 0) ? 'border-t-4' : '',
+          ]"
         >
           {{ cell !== 0 ? cell : "" }}
         </div>
