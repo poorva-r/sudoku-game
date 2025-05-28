@@ -16,7 +16,7 @@
           <input
             v-if="isEditable(rowIndex, cellIndex)"
             v-model.number="board[rowIndex][cellIndex]"
-            class="w-full h-full items-center text-center text-primary bg-black"
+            class="w-full h-full items-center text-center text-yellow-400 bg-black"
             type="numeric"
             inputmode="numeric"
             maxlength="1"
