@@ -31,12 +31,20 @@
         </div>
       </div>
     </div>
+    <div class="flex flex-row gap-8">
     <button
       @click="checkSolution"
       class="font-body mt-8 font-bold text-background text-2xl flex justify-center gap-2 items-center mx-auto shadow-xl bg-primary backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#FFFFFF] hover:text-background before:-z-10 before:aspect-square before:hover:scale-200 before:hover:duration-500 relative z-10 px-8 py-2 overflow-hidden border-2 rounded-full group"
     >
       Check Solution
     </button>
+      <button
+      @click="resetBoard"
+      class="font-body mt-8 font-bold text-background text-2xl flex justify-center gap-2 items-center mx-auto shadow-xl bg-primary backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#FFFFFF] hover:text-background before:-z-10 before:aspect-square before:hover:scale-200 before:hover:duration-500 relative z-10 px-8 py-2 overflow-hidden border-2 rounded-full group"
+    >
+      Reset
+    </button>
+    </div>
   </div>
 </template>
 <script>
@@ -74,6 +82,9 @@ export default {
     // checks if the cell was originally 0, or editable
     isEditable(rowIndex, cellIndex) {
       return this.originalBoard[rowIndex][cellIndex] === 0;
+    },
+    resetBoard() {
+      this.board = this.originalBoard.map(row => row.map(cell => (cell === 0? undefined :cell)));
     },
     updateCellValue(rowIndex, cellIndex, value) {
       this.board[rowIndex][cellIndex] = value === "" ? 0 : Number(value);
