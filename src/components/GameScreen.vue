@@ -31,19 +31,22 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-row gap-8">
+    <div class="flex flex-row gap-10">
     <button
       @click="checkSolution"
       class="font-body mt-8 font-bold text-background text-2xl flex justify-center gap-2 items-center mx-auto shadow-xl bg-primary backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#FFFFFF] hover:text-background before:-z-10 before:aspect-square before:hover:scale-200 before:hover:duration-500 relative z-10 px-8 py-2 overflow-hidden border-2 rounded-full group"
     >
-      Check Solution
+      Finish
     </button>
       <button
       @click="resetBoard"
       class="font-body mt-8 font-bold text-background text-2xl flex justify-center gap-2 items-center mx-auto shadow-xl bg-primary backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#FFFFFF] hover:text-background before:-z-10 before:aspect-square before:hover:scale-200 before:hover:duration-500 relative z-10 px-8 py-2 overflow-hidden border-2 rounded-full group"
     >
-      Reset
+      Clear
     </button>
+    <div class="text-background font-body font-bold text-2xl mt-8 bg-primary px-8 py-2 border-2 border-gray-50 rounded-full">
+      Timer: {{ formatTime(timer) }}
+    </div>
     </div>
   </div>
 </template>
@@ -52,6 +55,8 @@ export default {
   name: "GameScreen",
   data() {
     return {
+      timer: 0,
+      intervalId: null,
       // static sudoku board
       board: [
         [, 3, 5, 2, 6, 9, 7, 8, 1],
@@ -78,11 +83,29 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.startTimer();
+  },
   methods: {
     // checks if the cell was originally 0, or editable
     isEditable(rowIndex, cellIndex) {
       return this.originalBoard[rowIndex][cellIndex] === 0;
     },
+    startTimer() { 
+      this.timer = 0;
+      this.intervalId = setInterval(()=> {
+        this.timer++;
+      },1000);
+    },
+    stopTimer() { 
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    },
+    formatTime(seconds) {
+      const mins = Math.floor(seconds/60).toString().padStart(2, '0');
+      const secs = (seconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`; 
+        },
     resetBoard() {
       this.board = this.originalBoard.map(row => row.map(cell => (cell === 0? undefined :cell)));
     },
@@ -121,6 +144,7 @@ export default {
         }
       }
       if (isCorrect) {
+        this.stopTimer();
         alert("You win!");
       } else {
         alert("Please try again!");
