@@ -1,6 +1,8 @@
 <template>
   <div class="bg-background h-screen flex flex-col items-center justify-center">
-    <div class="grid grid-cols-9 border-2 md:border-4 border-white text-text text-2xl md:text-3xl">
+    <div
+      class="grid grid-cols-9 border-2 md:border-4 border-white text-text text-2xl md:text-3xl"
+    >
       <div v-for="(row, rowIndex) in board" :key="rowIndex">
         <div
           v-for="(cell, cellIndex) in row"
@@ -13,7 +15,7 @@
         >
           <input
             v-if="isEditable(rowIndex, cellIndex)"
-            v-model="board[rowIndex][cellIndex]"
+            v-model.number="board[rowIndex][cellIndex]"
             class="w-full h-full items-center text-center text-primary bg-black"
             type="numeric"
             inputmode="numeric"
@@ -22,7 +24,6 @@
             min="1"
             max="9"
             :placeholder="cell === 0 ? '' : cell"
-            @input="updateCellValue(rowIndex, cellIndex, $event.target.value)"
           />
           <span v-else class="pointer-events-none">
             {{ cell }}
@@ -30,6 +31,12 @@
         </div>
       </div>
     </div>
+    <button
+      @click="checkSolution"
+      class="font-body mt-8 font-bold text-background text-2xl flex justify-center gap-2 items-center mx-auto shadow-xl bg-primary backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#FFFFFF] hover:text-background before:-z-10 before:aspect-square before:hover:scale-200 before:hover:duration-500 relative z-10 px-8 py-2 overflow-hidden border-2 rounded-full group"
+    >
+      Check Solution
+    </button>
   </div>
 </template>
 <script>
@@ -39,15 +46,15 @@ export default {
     return {
       // static sudoku board
       board: [
-        [ , 3, 5, 2, 6, 9, 7, 8, 1],
-        [6,  , 2, 5, 7, 1, 4, 9, 3],
+        [, 3, 5, 2, 6, 9, 7, 8, 1],
+        [6, , 2, 5, 7, 1, 4, 9, 3],
         [1, 9, 7, 8, 3, 4, 5, 6, 2],
-        [8, 2, 6, 1,  , 5, 3, 4, 7],
+        [8, 2, 6, 1, , 5, 3, 4, 7],
         [3, 7, 4, 6, 8, 2, 9, 1, 5],
         [9, 5, 1, 7, 4, 3, 6, 2, 8],
-        [5, 1,  , 3, 2, 6, 8, 7, 4],
-        [2, 4, 8, 9, 5, 7,  , 3, 6],
-        [7, 6, 3, 4, 1, 8, 2,  , 9],
+        [5, 1, , 3, 2, 6, 8, 7, 4],
+        [2, 4, 8, 9, 5, 7, , 3, 6],
+        [7, 6, 3, 4, 1, 8, 2, , 9],
       ],
       // to track original state of the board
       originalBoard: [
@@ -69,7 +76,44 @@ export default {
       return this.originalBoard[rowIndex][cellIndex] === 0;
     },
     updateCellValue(rowIndex, cellIndex, value) {
-      this.$set(this.board[rowIndex], cellIndex, value === "" ? 0 : value);
+      this.board[rowIndex][cellIndex] = value === "" ? 0 : Number(value);
+    },
+    checkSolution() {
+      const correctSolution = [
+        [4, 3, 5, 2, 6, 9, 7, 8, 1],
+        [6, 8, 2, 5, 7, 1, 4, 9, 3],
+        [1, 9, 7, 8, 3, 4, 5, 6, 2],
+        [8, 2, 6, 1, 9, 5, 3, 4, 7],
+        [3, 7, 4, 6, 8, 2, 9, 1, 5],
+        [9, 5, 1, 7, 4, 3, 6, 2, 8],
+        [5, 1, 9, 3, 2, 6, 8, 7, 4],
+        [2, 4, 8, 9, 5, 7, 1, 3, 6],
+        [7, 6, 3, 4, 1, 8, 2, 5, 9],
+      ];
+      let isCorrect = true;
+
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (this.board[i][j] !== correctSolution[i][j]) {
+            isCorrect = false;
+            console.log(
+              "Incorrect cell at",
+              i,
+              j,
+              "expected",
+              correctSolution[i][j],
+              "but got",
+              this.board[i][j]
+            );
+            break;
+          }
+        }
+      }
+      if (isCorrect) {
+        alert("You win!");
+      } else {
+        alert("Please try again!");
+      }
     },
   },
 };
